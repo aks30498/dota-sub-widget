@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html style="margin:0px;padding:0px;display:inline-block" lang="en" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="tabSwitch.css">
+  </head>
+  <body style="margin:0px;padding:0px; display:inline-block">
+    <button id="showDota" type="button" name="button">r/Dota2</button>
+  </body>
+</html>
+
+<script>
+    {
+      const scripts = [];
+
+      // Dynamically insert the DLL script in development env in the
+      // renderer process
+      if (process.env.NODE_ENV === 'development') {
+        scripts.push('../dll/renderer.dev.dll.js');
+      }
+
+      // Dynamically insert the bundled app script in the renderer process
+      const port = process.env.PORT || 1212;
+      scripts.push(
+        process.env.HOT
+          ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+          : './dist/renderer.prod.js'
+      );
+
+      document.write(
+        scripts
+          .map(script => `<script defer src="${script}"><\/script>`)
+          .join('')
+      );
+    }
+  const { ipcRenderer } = require("electron");
+  let button = document.getElementById('showDota');
+  button.addEventListener('click',() => {ipcRenderer.send('showDota')})
+</script>
